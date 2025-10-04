@@ -1,0 +1,194 @@
+{% extends 'glassesapp/base.html' %}
+
+{% block title %}Contact Us - Glasses Shop{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <h1 class="display-4 fw-bold mb-4">Get In <span class="text-primary">Touch</span></h1>
+            <p class="lead mb-4">We're always here to help with any questions, concerns, or feedback you might have. Reach out to us through any of the methods below.</p>
+            
+            <div class="mb-4">
+                <h4 class="mb-3">Visit Our Store</h4>
+                <div class="d-flex align-items-start mb-3">
+                    <div class="bg-primary rounded-circle p-2 me-3 mt-1">
+                        <i class="fas fa-map-marker-alt text-white"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-1">Our Main Location:</h6>
+                        <p class="text-muted mb-0">123 Shahbaz Town, Near Central Hospital<br>Dera Ghazi Khan, Punjab, Pakistan</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start mb-3">
+                    <div class="bg-primary rounded-circle p-2 me-3 mt-1">
+                        <i class="fas fa-clock text-white"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-1">Opening Hours:</h6>
+                        <p class="text-muted mb-0">Monday - Saturday: 9:00 AM - 8:00 PM<br>Sunday: 10:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <h4 class="mb-3">Contact Information</h4>
+                <div class="d-flex align-items-start mb-3">
+                    <div class="bg-primary rounded-circle p-2 me-3 mt-1">
+                        <i class="fas fa-phone text-white"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-1">Phone:</h6>
+                        <p class="text-muted mb-0">+92 300 1234567<br>+92 64 2700123</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start mb-3">
+                    <div class="bg-primary rounded-circle p-2 me-3 mt-1">
+                        <i class="fas fa-envelope text-white"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-1">Email:</h6>
+                        <p class="text-muted mb-0">info@glassesshop.com<br>support@glassesshop.com</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-4">
+                <h4 class="mb-3">Connect With Us</h4>
+                <div class="d-flex gap-3">
+                    <a href="#" class="btn btn-outline-primary rounded-circle" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-primary rounded-circle" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-primary rounded-circle" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="btn btn-outline-primary rounded-circle" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-4">Send Us a Message</h3>
+                    
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    
+                    <form method="post" action="{% url 'contact' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="subject" name="subject">
+                        </div>
+                        <div class="mb-4">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Map Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                <div class="card-body p-0">
+                    <h3 class="fw-bold mb-4 p-4">Our Location in Dera Ghazi Khan</h3>
+                    <div class="ratio ratio-21x9">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d108615.26344811943!2d70.75149922655033!3d30.05080231819414!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x393b90c1de241f67%3A0x1edc6625415bd48e!2sDera%20Ghazi%20Khan%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2s!4v1651324551922!5m2!1sen!2s" 
+                                style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FAQ Section -->
+    <div class="row mt-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold">Frequently Asked Questions</h2>
+            <div class="d-inline-block bg-primary" style="width: 80px; height: 3px;"></div>
+        </div>
+        
+        <div class="col-lg-10 mx-auto">
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item border mb-3 rounded-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Do you offer eye examinations at your store?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, we have a fully equipped eye examination facility at our DG Khan store. Our qualified optometrists can provide comprehensive eye exams. We recommend booking an appointment in advance by calling our store or using our online booking system.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item border mb-3 rounded-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            What is your return policy?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            We offer a 30-day satisfaction guarantee on all our products. If you're not completely satisfied with your purchase, you can return it within 30 days for a full refund or exchange. Please note that custom prescription lenses are non-refundable unless there's a manufacturing defect.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item border mb-3 rounded-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            How long does it take to get a new pair of glasses?
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            For standard prescriptions, we typically have your new glasses ready within 3-5 business days. Complex prescriptions or specialty lenses may take up to 7-10 business days. We offer an express service for an additional fee, which can have your glasses ready within 24-48 hours for most prescriptions.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item border mb-3 rounded-3 shadow-sm">
+                    <h2 class="accordion-header" id="headingFour">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            Do you deliver to other cities outside of DG Khan?
+                        </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, we offer nationwide delivery services across Pakistan. Delivery to major cities typically takes 2-3 business days, while remote areas may take 4-5 business days. Shipping is free for orders above Rs. 5,000, and a nominal shipping fee applies for orders below this amount.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

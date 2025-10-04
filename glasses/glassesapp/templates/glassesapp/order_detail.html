@@ -1,0 +1,184 @@
+{% extends 'glassesapp/base.html' %}
+
+{% block title %}Order #{{ order.id }} - Glasses Shop{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'profile' %}#orders">My Orders</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Order #{{ order.id }}</li>
+        </ol>
+    </nav>
+
+    <!-- Order Header -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="mb-3">Order #{{ order.id }}</h4>
+                    <p class="mb-1"><strong>Date:</strong> {{ order.created_at|date:"F j, Y" }}</p>
+                    <p class="mb-1"><strong>Status:</strong> 
+                        <span class="badge {% if order.status == 'delivered' %}bg-success{% elif order.status == 'cancelled' %}bg-danger{% else %}bg-primary{% endif %}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5 class="mb-3">Total: ₹{{ order.total_price }}</h5>
+                    <p class="mb-1"><strong>Payment Status:</strong> Paid</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Items -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Order Items</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if item.product.images.exists %}
+                                    <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-0">{{ item.product.name }}</h6>
+                                        <small class="text-muted">{{ item.product.category.name }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>₹{{ item.price }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td class="text-end">₹{{ item.total_price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                            <td class="text-end"><strong>₹{{ order.total_price }}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shipping Information -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Shipping Information</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="mb-3">Shipping Address</h6>
+                    <p class="mb-1">{{ order.first_name }} {{ order.last_name }}</p>
+                    <p class="mb-1">{{ order.shipping_address }}</p>
+                    <p class="mb-1">{{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_zip }}</p>
+                    <p class="mb-1">{{ order.shipping_country }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="mb-3">Contact Information</h6>
+                    <p class="mb-1"><strong>Email:</strong> {{ order.email }}</p>
+                    <p class="mb-1"><strong>Phone:</strong> {{ order.phone }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Timeline -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Order Timeline</h5>
+        </div>
+        <div class="card-body">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-success"></div>
+                    <div class="timeline-content">
+                        <h6 class="mb-0">Order Placed</h6>
+                        <small class="text-muted">{{ order.created_at|date:"F j, Y, g:i a" }}</small>
+                    </div>
+                </div>
+                {% if order.status == 'processing' or order.status == 'shipped' or order.status == 'delivered' %}
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-primary"></div>
+                    <div class="timeline-content">
+                        <h6 class="mb-0">Order Processing</h6>
+                        <small class="text-muted">{{ order.updated_at|date:"F j, Y, g:i a" }}</small>
+                    </div>
+                </div>
+                {% endif %}
+                {% if order.status == 'shipped' or order.status == 'delivered' %}
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-info"></div>
+                    <div class="timeline-content">
+                        <h6 class="mb-0">Order Shipped</h6>
+                        <small class="text-muted">{{ order.updated_at|date:"F j, Y, g:i a" }}</small>
+                    </div>
+                </div>
+                {% endif %}
+                {% if order.status == 'delivered' %}
+                <div class="timeline-item">
+                    <div class="timeline-marker bg-success"></div>
+                    <div class="timeline-content">
+                        <h6 class="mb-0">Order Delivered</h6>
+                        <small class="text-muted">{{ order.updated_at|date:"F j, Y, g:i a" }}</small>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .timeline {
+        position: relative;
+        padding: 20px 0;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-left: 40px;
+        margin-bottom: 20px;
+    }
+    
+    .timeline-marker {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+    }
+    
+    .timeline-item:not(:last-child)::before {
+        content: '';
+        position: absolute;
+        left: 7px;
+        top: 15px;
+        height: calc(100% + 5px);
+        width: 1px;
+        background-color: #dee2e6;
+    }
+</style>
+{% endblock %} 

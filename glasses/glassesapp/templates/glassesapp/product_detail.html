@@ -1,0 +1,169 @@
+{% extends 'glassesapp/base.html' %}
+
+{% block title %}{{ product.name }} - Glasses Shop{% endblock %}
+
+{% block content %}
+<!-- Product Detail Section -->
+<section class="py-5">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'product_list' %}">Products</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'product_list' %}?category={{ product.category.id }}">{{ product.category.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <!-- Product Images -->
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                {% for image in product.images.all %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ product.name }}" style="height: 500px; object-fit: cover;">
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% if product.images.count > 1 %}
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h1 class="h2 mb-3">{{ product.name }}</h1>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-primary me-2">{{ product.category.name }}</span>
+                            <span class="badge {% if product.is_available %}bg-success{% else %}bg-danger{% endif %}">
+                                {% if product.is_available %}
+                                <i class="fas fa-check-circle me-1"></i> In Stock
+                                {% else %}
+                                <i class="fas fa-times-circle me-1"></i> Out of Stock
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <div class="mb-4">
+                            <h2 class="text-primary mb-0">Rs. {{ product.price }}</h2>
+                            {% if product.stock > 0 %}
+                            <small class="text-muted">{{ product.stock }} units available</small>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="mb-3">Description</h5>
+                            <p class="text-muted">{{ product.description }}</p>
+                        </div>
+
+                        {% if product.is_available %}
+                        <form method="post" action="{% url 'add_to_cart' product.id %}" class="mb-4">
+                            {% csrf_token %}
+                            <div class="row g-3 align-items-center">
+                                <div class="col-auto">
+                                    <label for="quantity" class="col-form-label">Quantity:</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" max="{{ product.stock }}">
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        {% endif %}
+
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-primary flex-grow-1">
+                                <i class="fas fa-heart me-2"></i>Add to Wishlist
+                            </button>
+                            <button class="btn btn-outline-primary flex-grow-1">
+                                <i class="fas fa-share-alt me-2"></i>Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Features -->
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body">
+                        <h5 class="mb-4">Product Features</h5>
+                        <div class="row g-4">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <span>Premium Quality</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <span>UV Protection</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <span>Scratch Resistant</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <span>Lightweight Frame</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products -->
+        <section class="mt-5">
+            <h3 class="mb-4">You May Also Like</h3>
+            <div class="row g-4">
+                {% for related_product in related_products %}
+                <div class="col-md-3">
+                    <div class="card product-card h-100 border-0 shadow-sm animate__animated animate__fadeInUp">
+                        {% if related_product.images.exists %}
+                        <img src="{{ related_product.images.first.image.url }}" class="card-img-top product-image" alt="{{ related_product.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ related_product.name }}</h5>
+                            <p class="card-text text-primary fw-bold mb-3">Rs. {{ related_product.price }}</p>
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'product_detail' related_product.slug %}" class="btn btn-primary">View Details</a>
+                                {% if user.is_authenticated and related_product.is_available %}
+                                <a href="{% url 'add_to_cart' related_product.id %}" class="btn btn-outline-primary">
+                                    <i class="fas fa-cart-plus"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</section>
+{% endblock %} 

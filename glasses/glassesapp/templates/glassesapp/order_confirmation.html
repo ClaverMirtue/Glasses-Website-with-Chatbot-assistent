@@ -1,0 +1,115 @@
+{% extends 'glassesapp/base.html' %}
+
+{% block title %}Order Confirmation - Glasses Shop{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm text-center mb-4">
+                    <div class="card-body py-5">
+                        <i class="fas fa-check-circle text-success fa-4x mb-4"></i>
+                        <h1 class="h2 mb-3">Order Confirmed!</h1>
+                        <p class="lead text-muted mb-4">Thank you for your purchase. Your order has been received.</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'profile' %}" class="btn btn-primary">
+                                <i class="fas fa-user me-2"></i>View Order History
+                            </a>
+                            <a href="{% url 'home' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-home me-2"></i>Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">Order Details</h5>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h6 class="mb-3">Order Information</h6>
+                                <p class="mb-1"><strong>Order Number:</strong> #{{ order.id }}</p>
+                                <p class="mb-1"><strong>Date:</strong> {{ order.created_at|date:"F d, Y" }}</p>
+                                <p class="mb-1"><strong>Status:</strong> <span class="badge bg-success">Confirmed</span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="mb-3">Shipping Information</h6>
+                                <p class="mb-1">{{ order.shipping_address }}</p>
+                                <p class="mb-1">{{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_zip }}</p>
+                                <p class="mb-1">{{ order.shipping_country }}</p>
+                            </div>
+                        </div>
+
+                        <h6 class="mb-3">Order Items</h6>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th class="text-end">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in order.items.all %}
+                                    <tr>
+                                        <td>{{ item.product.name }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td class="text-end">Rs. {{ item.total_price }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="2" class="text-end"><strong>Subtotal:</strong></td>
+                                        <td class="text-end">Rs. {{ order.total_price }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="text-end"><strong>Shipping:</strong></td>
+                                        <td class="text-end">Free</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="text-end"><strong>Total:</strong></td>
+                                        <td class="text-end"><strong>Rs. {{ order.total_price }}</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">What's Next?</h5>
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <i class="fas fa-envelope text-primary fa-2x mb-3"></i>
+                                    <h6>Order Confirmation</h6>
+                                    <p class="small text-muted">You will receive an email confirmation shortly.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <i class="fas fa-box text-primary fa-2x mb-3"></i>
+                                    <h6>Order Processing</h6>
+                                    <p class="small text-muted">We'll start processing your order right away.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-center">
+                                    <i class="fas fa-truck text-primary fa-2x mb-3"></i>
+                                    <h6>Shipping Updates</h6>
+                                    <p class="small text-muted">You'll receive shipping updates via email.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

@@ -1,0 +1,834 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Glasses Shop{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --accent-color: #3498db;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            background-color: var(--primary-color);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: translateY(-2px);
+        }
+        
+        .navbar-brand i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent-color) !important;
+            transform: translateY(-2px);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--accent-color);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        
+        .cart-icon {
+            position: relative;
+            padding: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .cart-icon:hover {
+            transform: translateY(-2px);
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .user-dropdown .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            background-color: rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .user-dropdown .dropdown-toggle:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        .user-dropdown .dropdown-toggle i {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+        
+        .user-dropdown .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 0.5rem;
+        }
+        
+        .user-dropdown .dropdown-item {
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .user-dropdown .dropdown-item:hover {
+            background-color: #f8f9fa;
+            transform: translateX(5px);
+        }
+        
+        .user-dropdown .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+        
+        .user-dropdown .dropdown-divider {
+            margin: 0.5rem 0;
+        }
+        
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3rem 0;
+            margin-top: auto;
+        }
+        
+        .footer h5 {
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-link {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-link:hover {
+            color: white;
+        }
+        
+        .social-link {
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-link:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        
+        .chat-toggle-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .chat-toggle-btn:hover {
+            transform: scale(1.1);
+            background-color: var(--primary-color);
+        }
+        
+        .chat-toggle-btn i {
+            font-size: 24px;
+        }
+        
+        .chatbot-window {
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            transform-origin: bottom right;
+            animation: zoomIn 0.2s ease;
+        }
+        
+        .chatbot-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chatbot-header h4 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .chatbot-close {
+            color: white;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .chatbot-close:hover {
+            transform: scale(1.2);
+        }
+        
+        .chatbot-body {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .chatbot-footer {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chatbot-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .chatbot-input:focus {
+            border-color: var(--accent-color);
+        }
+        
+        .chatbot-send {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .chatbot-send:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        
+        .bot-message, .user-message {
+            max-width: 80%;
+            padding: 12px 15px;
+            border-radius: 15px;
+            position: relative;
+            word-wrap: break-word;
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+            background-color: #f1f1f1;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background-color: var(--accent-color);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .product-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .chat-product-card {
+            display: flex;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: white;
+            transition: transform 0.3s ease;
+        }
+        
+        .chat-product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .chat-product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+        }
+        
+        .chat-product-info {
+            padding: 10px;
+            flex: 1;
+        }
+        
+        .chat-product-title {
+            font-weight: 600;
+            margin: 0 0 5px 0;
+            font-size: 14px;
+        }
+        
+        .chat-product-price {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        .chat-product-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 12px;
+            display: block;
+            margin-top: 5px;
+        }
+        
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .typing {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            padding: 10px 15px;
+            background-color: #f1f1f1;
+            border-radius: 15px;
+            width: fit-content;
+            align-self: flex-start;
+        }
+        
+        .typing span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #888;
+            border-radius: 50%;
+            animation: dot-pulse 1.5s infinite ease-in-out;
+        }
+        
+        .typing span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes dot-pulse {
+            0%, 100% {
+                transform: scale(0.7);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fas fa-glasses"></i>
+                <span>Glasses<span class="text-accent">Shop</span></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'product_list' %}">
+                            <i class="fas fa-glasses me-1"></i>Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">
+                            <i class="fas fa-info-circle me-1"></i>About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">
+                            <i class="fas fa-envelope me-1"></i>Contact
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link cart-icon" href="{% url 'cart' %}">
+                            <i class="fas fa-shopping-cart"></i>
+                            {% if cart.items.exists %}
+                            <span class="cart-badge">{{ cart.items.count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown user-dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span>{{ user.username }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'profile' %}">
+                                    <i class="fas fa-user"></i>My Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'profile' %}#orders">
+                                    <i class="fas fa-shopping-bag"></i>My Orders
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'profile' %}#addresses">
+                                    <i class="fas fa-map-marker-alt"></i>My Addresses
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                    <i class="fas fa-sign-out-alt"></i>Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signup' %}">
+                            <i class="fas fa-user-plus me-1"></i>Sign Up
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>About Us</h5>
+                    <p>Your one-stop shop for stylish and affordable glasses. We offer a wide range of frames to suit every style and need.</p>
+                    <div class="mt-3">
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'home' %}" class="footer-link">Home</a></li>
+                        <li><a href="{% url 'product_list' %}" class="footer-link">Products</a></li>
+                        <li><a href="{% url 'about' %}" class="footer-link">About Us</a></li>
+                        <li><a href="{% url 'contact' %}" class="footer-link">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-map-marker-alt me-2"></i>123 Glasses Street, City</li>
+                        <li><i class="fas fa-phone me-2"></i>+1 234 567 890</li>
+                        <li><i class="fas fa-envelope me-2"></i>info@glassesshop.com</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4" style="border-color: rgba(255,255,255,0.1);">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2024 Glasses Shop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <h4><i class="fas fa-robot me-2"></i>Glasses Shop Assistant</h4>
+                <button class="chatbot-close" id="closeChatbot"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="chatbot-body" id="chatbotBody">
+                <!-- Messages will be added here dynamically -->
+                <div class="bot-message">
+                    Hello! I'm your Glasses Shop assistant. How can I help you today? You can ask me about:
+                    <ul>
+                        <li>Our product categories</li>
+                        <li>Specific products</li>
+                        <li>Product recommendations</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="chatbot-footer">
+                <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Type your message here...">
+                <button class="chatbot-send" id="sendMessage"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button class="chat-toggle-btn" id="chatToggleBtn">
+            <i class="fas fa-comment-dots"></i>
+        </button>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Chatbot JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatToggleBtn = document.getElementById('chatToggleBtn');
+            const chatbotWindow = document.getElementById('chatbotWindow');
+            const closeChatbot = document.getElementById('closeChatbot');
+            const chatbotBody = document.getElementById('chatbotBody');
+            const chatbotInput = document.getElementById('chatbotInput');
+            const sendMessage = document.getElementById('sendMessage');
+            
+            // Toggle chatbot visibility
+            chatToggleBtn.addEventListener('click', function() {
+                chatbotWindow.style.display = chatbotWindow.style.display === 'flex' ? 'none' : 'flex';
+                
+                if (chatbotWindow.style.display === 'flex') {
+                    chatbotInput.focus();
+                }
+            });
+            
+            // Close chatbot
+            closeChatbot.addEventListener('click', function() {
+                chatbotWindow.style.display = 'none';
+            });
+            
+            // Send message on enter key
+            chatbotInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && chatbotInput.value.trim() !== '') {
+                    sendUserMessage();
+                }
+            });
+            
+            // Send message on button click
+            sendMessage.addEventListener('click', function() {
+                if (chatbotInput.value.trim() !== '') {
+                    sendUserMessage();
+                }
+            });
+            
+            // Function to send user message
+            function sendUserMessage() {
+                const message = chatbotInput.value.trim();
+                
+                // Add user message to chat
+                const userMessageElement = document.createElement('div');
+                userMessageElement.className = 'user-message';
+                userMessageElement.textContent = message;
+                chatbotBody.appendChild(userMessageElement);
+                
+                // Clear input
+                chatbotInput.value = '';
+                
+                // Scroll to bottom
+                chatbotBody.scrollTop = chatbotBody.scrollHeight;
+                
+                // Show typing indicator
+                const typingIndicator = document.createElement('div');
+                typingIndicator.className = 'typing';
+                typingIndicator.innerHTML = '<span></span><span></span><span></span>';
+                chatbotBody.appendChild(typingIndicator);
+                chatbotBody.scrollTop = chatbotBody.scrollHeight;
+                
+                // Process the message
+                processUserMessage(message, typingIndicator);
+            }
+            
+            // Function to process user message and generate response
+            function processUserMessage(message, typingIndicator) {
+                message = message.toLowerCase();
+                
+                // Determine the type of query
+                let queryType, categoryId, searchQuery;
+                
+                if (message.includes('category') || message.includes('categories')) {
+                    queryType = 'categories';
+                } else if (message.includes('show me products') || message.includes('all products')) {
+                    queryType = 'products';
+                } else {
+                    // If no specific category mentioned, treat as product search
+                    queryType = 'products';
+                    searchQuery = message;
+                }
+                
+                // Match specific category requests
+                const categoryMatches = message.match(/show (me )?(products in|products from|items in|items from) (\w+)/i);
+                if (categoryMatches) {
+                    queryType = 'products';
+                    searchQuery = categoryMatches[3]; // The category name
+                }
+                
+                // Call API to get data
+                fetch(`/chatbot-api/?type=${queryType}&query=${encodeURIComponent(searchQuery || '')}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Remove typing indicator
+                        setTimeout(() => {
+                            typingIndicator.remove();
+                            
+                            // Generate response based on data
+                            if (queryType === 'categories') {
+                                displayCategories(data.categories);
+                            } else if (queryType === 'products') {
+                                displayProducts(data.products, searchQuery);
+                            }
+                            
+                            // Scroll to bottom
+                            chatbotBody.scrollTop = chatbotBody.scrollHeight;
+                        }, 1000); // Simulate typing delay
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                        typingIndicator.remove();
+                        
+                        // Error message
+                        const errorMessage = document.createElement('div');
+                        errorMessage.className = 'bot-message';
+                        errorMessage.textContent = "I'm sorry, I encountered an error. Please try again.";
+                        chatbotBody.appendChild(errorMessage);
+                        
+                        chatbotBody.scrollTop = chatbotBody.scrollHeight;
+                    });
+            }
+            
+            // Function to display categories
+            function displayCategories(categories) {
+                if (categories && categories.length > 0) {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'bot-message';
+                    
+                    let content = 'Here are our product categories:<ul>';
+                    categories.forEach(category => {
+                        content += `<li><strong>${category.name}</strong>${category.description ? `: ${category.description}` : ''}</li>`;
+                    });
+                    content += '</ul>';
+                    content += 'You can ask me to show products from any of these categories.';
+                    
+                    messageElement.innerHTML = content;
+                    chatbotBody.appendChild(messageElement);
+                } else {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'bot-message';
+                    messageElement.textContent = "I couldn't find any categories. Please try something else.";
+                    chatbotBody.appendChild(messageElement);
+                }
+            }
+            
+            // Function to display products
+            function displayProducts(products, searchQuery) {
+                if (products && products.length > 0) {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'bot-message';
+                    
+                    let content = searchQuery 
+                        ? `Here are some products matching "${searchQuery}":` 
+                        : 'Here are some of our popular products:';
+                    
+                    messageElement.innerHTML = content;
+                    chatbotBody.appendChild(messageElement);
+                    
+                    // Create product list
+                    const productListElement = document.createElement('div');
+                    productListElement.className = 'product-list';
+                    
+                    products.forEach(product => {
+                        const productCard = document.createElement('div');
+                        productCard.className = 'chat-product-card';
+                        
+                        productCard.innerHTML = `
+                            <img src="${product.image_url}" alt="${product.name}" class="chat-product-image">
+                            <div class="chat-product-info">
+                                <h5 class="chat-product-title">${product.name}</h5>
+                                <p class="chat-product-price">Rs. ${product.price.toFixed(2)}</p>
+                                <a href="/product/${product.slug}/" class="chat-product-link">View Details</a>
+                            </div>
+                        `;
+                        
+                        productListElement.appendChild(productCard);
+                    });
+                    
+                    chatbotBody.appendChild(productListElement);
+                    
+                    // Follow-up message
+                    const followUpElement = document.createElement('div');
+                    followUpElement.className = 'bot-message';
+                    followUpElement.innerHTML = 'Is there anything specific you would like to know about these products?';
+                    chatbotBody.appendChild(followUpElement);
+                } else {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'bot-message';
+                    messageElement.textContent = searchQuery 
+                        ? `I couldn't find any products matching "${searchQuery}". Please try a different search.` 
+                        : "I couldn't find any products. Please try something else.";
+                    chatbotBody.appendChild(messageElement);
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

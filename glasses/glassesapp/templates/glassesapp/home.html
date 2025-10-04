@@ -1,0 +1,192 @@
+{% extends 'glassesapp/base.html' %}
+
+{% block title %}Home - Glasses Shop{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section position-relative overflow-hidden" style="height: 80vh; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1577803645773-f96470509666?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); background-size: cover; background-position: center;">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-md-8 text-white animate__animated animate__fadeInLeft">
+                <h1 class="display-3 fw-bold mb-4">Discover Your Perfect Style</h1>
+                <p class="lead mb-4">Explore our collection of premium eyewear that combines style, comfort, and quality.</p>
+                <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg animate__animated animate__pulse animate__infinite">Shop Now</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm animate__animated animate__fadeInUp">
+                    <div class="card-body text-center">
+                        <i class="fas fa-glasses fa-3x text-primary mb-3"></i>
+                        <h3 class="h5">Premium Quality</h3>
+                        <p class="text-muted">High-quality materials and expert craftsmanship in every pair.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-truck fa-3x text-primary mb-3"></i>
+                        <h3 class="h5">Free Shipping</h3>
+                        <p class="text-muted">Free shipping on all orders over Rs. 2000.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-undo fa-3x text-primary mb-3"></i>
+                        <h3 class="h5">Easy Returns</h3>
+                        <p class="text-muted">30-day return policy for your peace of mind.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-5" id="categories">
+    <div class="container">
+        <h2 class="text-center mb-5 animate__animated animate__fadeIn">Shop by Category</h2>
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm product-card animate__animated animate__fadeInUp">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <p class="card-text text-muted">{{ category.description|truncatewords:20 }}</p>
+                        <a href="{% url 'product_list' %}?category={{ category.id }}" class="btn btn-primary">View Products</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="py-5 bg-light" id="featured">
+    <div class="container">
+        <h2 class="text-center mb-5 animate__animated animate__fadeIn">Featured Products</h2>
+        <div class="row">
+            {% for product in featured_products %}
+            <div class="col-md-3 mb-4">
+                <div class="card product-card h-100 border-0 shadow-sm animate__animated animate__fadeInUp">
+                    {% if product.images.exists %}
+                    <img src="{{ product.images.first.image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text text-primary fw-bold">Rs. {{ product.price }}</p>
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'product_detail' product.slug %}" class="btn btn-primary">View Details</a>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-outline-primary">
+                                <i class="fas fa-cart-plus"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5" id="testimonials">
+    <div class="container">
+        <h2 class="text-center mb-5 animate__animated animate__fadeIn">What Our Customers Say</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm animate__animated animate__fadeInUp">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text">"Amazing quality and style. The glasses are exactly as described and look even better in person!"</p>
+                        <div class="d-flex align-items-center">
+                            <div class="ms-3">
+                                <h6 class="mb-0">Ahmad Khan</h6>
+                                <small class="text-muted">Regular Customer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text">"Great customer service and fast shipping. Will definitely shop here again!"</p>
+                        <div class="d-flex align-items-center">
+                            <div class="ms-3">
+                                <h6 class="mb-0">Bilal Ahmed</h6>
+                                <small class="text-muted">New Customer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text">"The variety of styles is impressive. Found the perfect pair for my face shape!"</p>
+                        <div class="d-flex align-items-center">
+                            <div class="ms-3">
+                                <h6 class="mb-0">Umer Malik</h6>
+                                <small class="text-muted">Loyal Customer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="py-5 bg-primary text-white" id="newsletter">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h2 class="mb-4 animate__animated animate__fadeIn">Subscribe to Our Newsletter</h2>
+                <p class="mb-4 animate__animated animate__fadeIn">Stay updated with our latest products and exclusive offers.</p>
+                <form class="row g-3 justify-content-center animate__animated animate__fadeInUp">
+                    <div class="col-md-8">
+                        <input type="email" class="form-control form-control-lg" placeholder="Enter your email">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-light btn-lg w-100">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 
